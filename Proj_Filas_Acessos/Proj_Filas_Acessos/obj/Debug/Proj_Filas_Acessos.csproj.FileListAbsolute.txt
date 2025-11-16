@@ -1,0 +1,7 @@
+C:\Users\jaque\OneDrive\Área de Trabalho\Proj_Filas_Acessos\Proj_Filas_Acessos\obj\Debug\Proj_Filas_Acessos.csproj.AssemblyReference.cache
+C:\Users\jaque\OneDrive\Área de Trabalho\Proj_Filas_Acessos\Proj_Filas_Acessos\obj\Debug\Proj_Filas_Acessos.csproj.CoreCompileInputs.cache
+C:\Users\jaque\OneDrive\Área de Trabalho\Proj_Filas_Acessos\Proj_Filas_Acessos\bin\Debug\Proj_Filas_Acessos.exe.config
+C:\Users\jaque\OneDrive\Área de Trabalho\Proj_Filas_Acessos\Proj_Filas_Acessos\bin\Debug\Proj_Filas_Acessos.exe
+C:\Users\jaque\OneDrive\Área de Trabalho\Proj_Filas_Acessos\Proj_Filas_Acessos\bin\Debug\Proj_Filas_Acessos.pdb
+C:\Users\jaque\OneDrive\Área de Trabalho\Proj_Filas_Acessos\Proj_Filas_Acessos\obj\Debug\Proj_Filas_Acessos.exe
+C:\Users\jaque\OneDrive\Área de Trabalho\Proj_Filas_Acessos\Proj_Filas_Acessos\obj\Debug\Proj_Filas_Acessos.pdb
