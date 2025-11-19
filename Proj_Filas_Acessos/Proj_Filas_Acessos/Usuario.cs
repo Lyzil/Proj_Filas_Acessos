@@ -21,18 +21,23 @@ namespace Proj_Filas_Acessos
         }
         public Usuario() : this(-1,"") { }
         public Usuario(int id) : this(id, "") { }
-        public bool concederPermissao(Ambiente ambiente)
+        public bool concederPermissao(Ambiente ambiente, Conexao cx)
         {
             if (!ambientes.Any(a => a.Id == ambiente.Id))
             {
                 ambientes.Add(ambiente);
+                cx.InsertUsuarioAmbiente(this.Id, ambiente.Id);
                 return true;
             }
             return false;
         }
-        public bool revogarPermissao(Ambiente ambiente)
+        public bool revogarPermissao(Ambiente ambiente, Conexao cx)
         {
-            return Ambientes.RemoveAll(a => a.Id == ambiente.Id) > 0;
+            bool remove = Ambientes.RemoveAll(a => a.Id == ambiente.Id) > 0;
+
+            if (remove)
+                cx.DeleteUsuarioAmbiente(this.Id, ambiente.Id);
+            return remove;
         }
         public override bool Equals(object obj)
         {

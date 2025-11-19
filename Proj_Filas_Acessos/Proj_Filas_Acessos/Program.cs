@@ -13,139 +13,59 @@ namespace Proj_Filas_Acessos
         {
             int opcao;
             Cadastro gerenciador = new Cadastro();
-/*
-            Console.WriteLine("=== TESTE SISTEMA DE ACESSOS ===\n");
+            /*
+                Descomentar para realizar o teste rápido do banco de dados 
+                e comentar para textar download/upload
+             * 
+             // ============================
+            // TESTE RÁPIDO DO BANCO DE DADOS
+            // ============================
+            Console.WriteLine("=== TESTE BANCO DE DADOS ===");
 
-            // --------------------------
-            // 1. Teste adicionar ambiente
-            // --------------------------
-            Console.WriteLine("TESTE: Adicionar ambientes");
-            gerenciador.adicionarAmbiente(new Ambiente(1, "Laboratório"));
-            gerenciador.adicionarAmbiente(new Ambiente(2, "Servidor"));
-            gerenciador.adicionarAmbiente(new Ambiente(3, "Biblioteca"));
-            gerenciador.adicionarAmbiente(new Ambiente(1, "Duplicado")); // deve falhar
-            Console.WriteLine();
+            // Criar instância do cadastro
 
-            // --------------------------
-            // 2. Teste pesquisar ambiente
-            // --------------------------
-            Console.WriteLine("TESTE: Pesquisar ambiente");
-            Ambiente a1 = gerenciador.pesquisarAmbiente(new Ambiente(1));
-            Console.WriteLine(a1.Id != -1
-                ? $"Encontrado: {a1.Id} - {a1.Nome}"
-                : "Ambiente não encontrado");
-            Console.WriteLine();
+            // 1️⃣ Adicionar ambientes
+            Ambiente lab = new Ambiente(1, "Laboratório");
+            Ambiente serv = new Ambiente(2, "Servidor");
+            gerenciador.adicionarAmbiente(lab);
+            gerenciador.adicionarAmbiente(serv);
 
-            // --------------------------
-            // 3. Teste remover ambiente
-            // --------------------------
-            Console.WriteLine("TESTE: Remover ambiente");
-            Console.WriteLine(gerenciador.removerAmbiente(new Ambiente(99)) ? "OK" : "Falhou (esperado)");
-            Console.WriteLine(gerenciador.removerAmbiente(new Ambiente(3)) ? "OK" : "Falhou");
-            Console.WriteLine();
+            // 2️⃣ Adicionar usuários
+            Usuario alice = new Usuario(10, "Alice");
+            Usuario bruno = new Usuario(11, "Bruno");
+            gerenciador.adicionarUsuario(alice);
+            gerenciador.adicionarUsuario(bruno);
 
-            // --------------------------
-            // 4. Teste adicionar usuário
-            // --------------------------
-            Console.WriteLine("TESTE: Adicionar usuários");
-            gerenciador.adicionarUsuario(new Usuario(10, "Alice"));
-            gerenciador.adicionarUsuario(new Usuario(11, "Bruno"));
-            gerenciador.adicionarUsuario(new Usuario(12, "Carlos"));
-            gerenciador.adicionarUsuario(new Usuario(10, "Duplicado")); // deve falhar
-            Console.WriteLine();
+            // 3️⃣ Conceder permissões
+            alice.concederPermissao(lab, gerenciador.Conexao);
+            alice.concederPermissao(serv, gerenciador.Conexao);
+            bruno.concederPermissao(serv, gerenciador.Conexao);
 
-            // --------------------------
-            // 5. Pesquisar usuário
-            // --------------------------
-            Console.WriteLine("TESTE: Pesquisar usuário");
-            Usuario u1t = gerenciador.pesquisarUsuario(new Usuario(10));
-            Console.WriteLine(u1t.Id != -1
-                ? $"Encontrado: {u1t.Id} - {u1t.Nome}"
-                : "Usuário não encontrado");
-            Console.WriteLine();
+            // 4️⃣ Upload para o banco
+            gerenciador.upload();
 
-            // --------------------------
-            // 6. Remover usuário
-            // --------------------------
-            Console.WriteLine("TESTE: Remover usuário");
-            Console.WriteLine(gerenciador.removerUsuario(new Usuario(99)) ? "OK" : "Falhou (esperado)");
-            Console.WriteLine();
+            // 5️⃣ Limpar listas em memória para simular novo carregamento
+            gerenciador.Usuarios.Clear();
+            gerenciador.Ambientes.Clear();
 
-            // --------------------------
-            // 7. Conceder permissão
-            // --------------------------
-            Console.WriteLine("TESTE: Conceder permissão");
+            // 6️⃣ Download do banco
+            gerenciador.download();
 
-            Ambiente serv = gerenciador.pesquisarAmbiente(new Ambiente(2));
-            Usuario alice = gerenciador.pesquisarUsuario(new Usuario(10));
+            // 7️⃣ Exibir dados carregados
+            Console.WriteLine("\n--- Usuários carregados do banco ---");
+            foreach (var u in gerenciador.Usuarios)
+            {
+                Console.WriteLine($"ID: {u.Id}, Nome: {u.Nome}, Permissões: {string.Join(", ", u.Ambientes.Select(a => a.Nome))}");
+            }
 
-            Console.WriteLine(
-                alice.concederPermissao(serv)
-                    ? "Permissão concedida"
-                    : "Falhou"
-            );
+            Console.WriteLine("\n--- Ambientes carregados do banco ---");
+            foreach (var a in gerenciador.Ambientes)
+            {
+                Console.WriteLine($"ID: {a.Id}, Nome: {a.Nome}");
+            }
 
-            // Conceder novamente (deve falhar)
-            Console.WriteLine(
-                alice.concederPermissao(serv)
-                    ? "Concedido (ERRO)"
-                    : "Já tinha permissão (OK)"
-            );
-            Console.WriteLine();
-
-            // --------------------------
-            // 8. Revogar permissão
-            // --------------------------
-            Console.WriteLine("TESTE: Revogar permissão");
-
-            Console.WriteLine(
-                alice.revogarPermissao(serv)
-                    ? "Permissão revogada"
-                    : "Falhou"
-            );
-
-            // Revogar novamente (deve falhar)
-            Console.WriteLine(
-                alice.revogarPermissao(serv)
-                    ? "Erro"
-                    : "Já não tinha permissão (OK)"
-            );
-            Console.WriteLine();
-
-            // --------------------------
-            // 9. Registrar logs
-            // --------------------------
-            Console.WriteLine("TESTE: Registrar logs");
-
-            // Concede novamente para testar autorizado
-            alice.concederPermissao(serv);
-
-            // Log autorizado
-            serv.registrarLog(new Log(DateTime.Now, alice, true));
-
-            // Log negado (Carlos não tem permissão)
-            Usuario carlos = gerenciador.pesquisarUsuario(new Usuario(12));
-            serv.registrarLog(new Log(DateTime.Now, carlos, false));
-
-            Console.WriteLine("Logs adicionados.\n");
-
-            // --------------------------
-            // 10. Consultar logs
-            // --------------------------
-            Console.WriteLine("TESTE: Consultar logs - Autorizados");
-            foreach (var log in serv.Logs.Where(x => x.TipoAcesso))
-                Console.WriteLine($"{log.Usuario.Nome} | {log.DtAcesso} | AUTORIZADO");
-
-            Console.WriteLine("\nTESTE: Consultar logs - Negados");
-            foreach (var log in serv.Logs.Where(x => !x.TipoAcesso))
-                Console.WriteLine($"{log.Usuario.Nome} | {log.DtAcesso} | NEGADO");
-
-            Console.WriteLine("\nTESTE: Consultar todos logs");
-            foreach (var log in serv.Logs)
-                Console.WriteLine($"{log.Usuario.Nome} | {log.DtAcesso} | {(log.TipoAcesso ? "AUTORIZADO" : "NEGADO")}");
-
-            Console.WriteLine("\n=== FIM DOS TESTES ===");
-*/
+            Console.WriteLine("\n=== FIM DO TESTE ===\n");
+             */
             do
             {
                 Console.WriteLine("\nMenu de opções:" +
@@ -274,7 +194,7 @@ namespace Proj_Filas_Acessos
                             Console.WriteLine("Ambiente não encontrado!");
                             break;
                         }
-                        Console.WriteLine(u1.concederPermissao(amb1)
+                        Console.WriteLine(u1.concederPermissao(amb1, gerenciador.Conexao)
                             ? "Permissão garantida!"
                             : "Não foi possível garantir permissão (já existe?)");
                         break;
@@ -305,7 +225,7 @@ namespace Proj_Filas_Acessos
                             break;
                         }
 
-                        Console.WriteLine(u2.revogarPermissao(amb2)
+                        Console.WriteLine(u2.revogarPermissao(amb2, gerenciador.Conexao)
                             ? "Permissão revogada!"
                             : "Não foi possível revogar permissão");
                         break;
@@ -336,7 +256,7 @@ namespace Proj_Filas_Acessos
                             break;
                         }
                         bool autorizado = u.Ambientes.Any(x => x.Id == a.Id);
-                        Log log = new Log(DateTime.Now, u, autorizado);
+                        Log log = new Log(DateTime.Now, u, a, autorizado);
                         a.registrarLog(log);
 
                         Console.WriteLine(autorizado ? "Acesso autorizado." : "Acesso negado.");

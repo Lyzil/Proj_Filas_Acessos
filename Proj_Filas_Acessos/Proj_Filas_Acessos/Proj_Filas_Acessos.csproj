@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Ambiente.cs" />
     <Compile Include="Cadastro.cs" />
+    <Compile Include="Conexao.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
